@@ -1,6 +1,7 @@
 import os
 import tempfile
 from pathlib import Path
+from harness.tools import Tool
 
 
 class Workspace:
@@ -51,3 +52,36 @@ class Workspace:
         )
 
         return f"File '{file_path}' edited successfully."
+
+
+def write_file_tool(workspace: Workspace) -> Tool:
+    return Tool(
+        name="write_file",
+        description="Write content to a file in the workspace.",
+        parameters={
+            "type": "object",
+            "properties": {
+                "file_path": {"type": "string"},
+                "content": {"type": "string"},
+            },
+            "required": ["file_path", "content"],
+        },
+        func=workspace.write_file,
+    )
+
+
+def edit_file_tool(workspace: Workspace) -> Tool:
+    return Tool(
+        name="edit_file",
+        description="Edit content of a file in the workspace.",
+        parameters={
+            "type": "object",
+            "properties": {
+                "file_path": {"type": "string"},
+                "new_content": {"type": "string"},
+                "old_content": {"type": ["string", "null"]},
+            },
+            "required": ["file_path", "new_content","old_content"],
+        },
+        func=workspace.edit_file,
+    )

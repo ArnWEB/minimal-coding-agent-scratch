@@ -3,6 +3,8 @@ from uuid import uuid4
 from icecream import ic
 
 from harness.agent import Agent
+from harness.tools import ToolRegistry, default_tools
+from harness.workspace import Workspace,edit_file_tool,write_file_tool
 from model.provider import openai
 
 ic.disable()
@@ -11,6 +13,11 @@ ic.disable()
 def main() -> None:
     stream=False
     provider = openai()
+    workspace= Workspace()
+    tools = default_tools()
+    tools.register(edit_file_tool(workspace))
+    tools.register(write_file_tool(workspace))
+
     agent = Agent(provider=provider, model_name=provider.model_name,stream=stream)
 
     session_id = uuid4()
